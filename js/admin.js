@@ -1,7 +1,15 @@
 // Tapanta Admin Panel
 
-const ADMIN_PASSWORD = 'tapanta2026';
+const ADMIN_HASH = '006e7c50e36e414210445a097499da0f89bd22aadbf3b999764cd5f93c4d68cc';
 const AUTH_KEY = 'tapanta_admin_auth';
+
+async function hashPassword(pass) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(pass);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
 
 let currentTab = 'pending';
 
@@ -22,10 +30,11 @@ function showLogin() {
   document.getElementById('adminPanel').classList.remove('active');
 }
 
-document.getElementById('loginForm').addEventListener('submit', (e) => {
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const pass = document.getElementById('adminPass').value;
-  if (pass === ADMIN_PASSWORD) {
+  const hashed = await hashPassword(pass);
+  if (hashed === ADMIN_HASH) {
     sessionStorage.setItem(AUTH_KEY, 'true');
     showPanel();
   } else {
