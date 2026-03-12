@@ -113,6 +113,14 @@
     }
     .admin-header h1 { font-size: 1.5rem; }
   </style>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5NHERV4JEE"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-5NHERV4JEE");
+  </script>
 </head>
 <body>
 
@@ -152,7 +160,10 @@
       <div class="container">
         <div class="admin-header">
           <h1>Expert Management</h1>
-          <button class="btn btn--outline btn--sm" id="logoutBtn">Logout</button>
+          <div style="display: flex; gap: 8px;">
+            <a href="https://analytics.google.com/analytics/web/#/p413893130179/reports/intelligenthome" target="_blank" rel="noopener" class="btn btn--outline btn--sm">📊 Analytics</a>
+            <button class="btn btn--outline btn--sm" id="logoutBtn">Logout</button>
+          </div>
         </div>
 
         <div class="admin-stats" id="adminStats"></div>
@@ -170,6 +181,7 @@
   </div>
 
   <script src="js/main.js"></script>
+  <script src="js/categories-data.js"></script>
   <script src="js/experts-data.js"></script>
   <script src="js/admin.js"></script>
 </body>

@@ -8,6 +8,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5NHERV4JEE"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-5NHERV4JEE");
+  </script>
 </head>
 <body>
 
@@ -37,98 +45,7 @@
   </section>
 
   <section class="section">
-    <div class="container">
-      <div class="categories-grid">
-        <a href="experts.html" class="category-card">
-          <div class="category-card__icon">🏥</div>
-          <div class="category-card__name">Health & Nutrition</div>
-        </a>
-        <a href="experts.html" class="category-card">
-          <div class="category-card__icon">💼</div>
-          <div class="category-card__name">Career Guidance</div>
-        </a>
-        <a href="experts.html" class="category-card">
-          <div class="category-card__icon">⚖️</div>
-          <div class="category-card__name">Legal Advice</div>
-        </a>
-        <a href="experts.html" class="category-card">
-          <div class="category-card__icon">📊</div>
-          <div class="category-card__name">Business Consulting</div>
-        </a>
-        <a href="experts.html" class="category-card">
-          <div class="category-card__icon">💰</div>
-          <div class="category-card__name">Finance & Tax</div>
-        </a>
-        <a href="experts.html" class="category-card">
-          <div class="category-card__icon">🧠</div>
-          <div class="category-card__name">Mental Health</div>
-        </a>
-        <a href="experts.html" class="category-card">
-          <div class="category-card__icon">💻</div>
-          <div class="category-card__name">Technology</div>
-        </a>
-        <a href="experts.html" class="category-card">
-          <div class="category-card__icon">🏋️</div>
-          <div class="category-card__name">Fitness & Wellness</div>
-        </a>
-        <a href="experts.html" class="category-card">
-          <div class="category-card__icon">🔮</div>
-          <div class="category-card__name">Astrology</div>
-        </a>
-        <a href="experts.html" class="category-card">
-          <div class="category-card__icon">🎓</div>
-          <div class="category-card__name">Education</div>
-        </a>
-        <a href="experts.html" class="category-card">
-          <div class="category-card__icon">💑</div>
-          <div class="category-card__name">Relationships</div>
-        </a>
-        <a href="experts.html" class="category-card">
-          <div class="category-card__icon">🚀</div>
-          <div class="category-card__name">Startup Advice</div>
-        </a>
-        <a href="experts.html" class="category-card">
-          <div class="category-card__icon">🙏</div>
-          <div class="category-card__name">Spiritual Guidance</div>
-        </a>
-        <a href="experts.html" class="category-card">
-          <div class="category-card__icon">🍎</div>
-          <div class="category-card__name">Nutrition & Diet</div>
-        </a>
-        <a href="experts.html" class="category-card">
-          <div class="category-card__icon">🚗</div>
-          <div class="category-card__name">Car Mechanic</div>
-        </a>
-        <a href="experts.html" class="category-card">
-          <div class="category-card__icon">⚡</div>
-          <div class="category-card__name">Auto Electrician</div>
-        </a>
-        <a href="experts.html" class="category-card">
-          <div class="category-card__icon">❄️</div>
-          <div class="category-card__name">Car AC Technician</div>
-        </a>
-        <a href="experts.html" class="category-card">
-          <div class="category-card__icon">🔧</div>
-          <div class="category-card__name">Car Detailing Expert</div>
-        </a>
-        <a href="experts.html" class="category-card">
-          <div class="category-card__icon">🎨</div>
-          <div class="category-card__name">Interior Designer</div>
-        </a>
-        <a href="experts.html" class="category-card">
-          <div class="category-card__icon">🧱</div>
-          <div class="category-card__name">Civil Engineer</div>
-        </a>
-        <a href="experts.html" class="category-card">
-          <div class="category-card__icon">🌿</div>
-          <div class="category-card__name">Gardening & Landscaping</div>
-        </a>
-        <a href="experts.html" class="category-card">
-          <div class="category-card__icon">🧹</div>
-          <div class="category-card__name">Pest Control Expert</div>
-        </a>
-      </div>
-    </div>
+    <div class="container" id="categoriesContainer"></div>
   </section>
 
   <footer class="footer">
@@ -165,10 +82,48 @@
           </ul>
         </div>
       </div>
-      <div class="footer__bottom">&copy; 2026 Tapanta (tapanta.in). All rights reserved.</div>
+      <div class="footer__bottom">&copy; 2026 Tapanta (tapanta.in). All rights reserved. · Developed by STM Group</div>
     </div>
   </footer>
 
   <script src="js/main.js"></script>
+  <script src="js/categories-data.js"></script>
+  <script src="js/experts-data.js"></script>
+  <script>
+    (async function() {
+      var container = document.getElementById('categoriesContainer');
+      var approved = [];
+      try { approved = await ExpertsDB.getApproved(); } catch(e) {}
+
+      // Count experts for a specific sub-category ONLY (exact match)
+      function countExactSub(subName) {
+        return approved.filter(function(e) { return e.category === subName; }).length;
+      }
+
+      container.innerHTML = Object.entries(CATEGORIES).map(function(entry) {
+        var cat = entry[0], data = entry[1];
+        return '<div id="' + encodeURIComponent(cat) + '" style="margin-bottom: 40px;">' +
+          '<h3 style="margin-bottom: 16px; font-size: 1.3rem;">' + data.icon + ' ' + cat + '</h3>' +
+          '<div class="categories-grid">' +
+            Object.entries(data.subs).map(function(subEntry) {
+              var sub = subEntry[0], icon = subEntry[1];
+              var count = countExactSub(sub);
+              var badge = count > 0
+                ? '<div style="font-size:0.75rem;color:var(--primary);margin-top:4px;">' + count + ' expert' + (count > 1 ? 's' : '') + '</div>'
+                : '<div style="font-size:0.72rem;color:var(--text-light);margin-top:4px;">No experts yet</div>';
+              return '<a href="experts.html?sub=' + encodeURIComponent(sub) + '" class="category-card">' +
+                '<div class="category-card__icon">' + icon + '</div>' +
+                '<div class="category-card__name">' + sub + '</div>' +
+                badge + '</a>';
+            }).join('') +
+          '</div></div>';
+      }).join('');
+
+      if (window.location.hash) {
+        var el = document.getElementById(decodeURIComponent(window.location.hash.slice(1)));
+        if (el) setTimeout(function() { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 150);
+      }
+    })();
+  </script>
 </body>
 </html>

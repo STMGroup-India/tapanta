@@ -7,6 +7,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5NHERV4JEE"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-5NHERV4JEE");
+  </script>
 </head>
 <body>
 
@@ -53,30 +61,19 @@
             <input type="tel" id="phone" placeholder="+91 9876543210" required>
           </div>
           <div class="form-group">
+            <label for="gender">Gender *</label>
+            <select id="gender" required>
+              <option value="">Select gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+              <option value="Prefer not to say">Prefer not to say</option>
+            </select>
+          </div>
+          <div class="form-group">
             <label for="category">Category *</label>
             <select id="category" required>
               <option value="">Select your expertise</option>
-              <option>Health & Nutrition</option>
-              <option>Career Guidance</option>
-              <option>Legal Advice</option>
-              <option>Business Consulting</option>
-              <option>Finance & Tax</option>
-              <option>Mental Health</option>
-              <option>Technology</option>
-              <option>Fitness & Wellness</option>
-              <option>Astrology</option>
-              <option>Education</option>
-              <option>Relationships</option>
-              <option>Startup Advice</option>
-              <option>Spiritual Guidance</option>
-              <option>Car Mechanic</option>
-              <option>Auto Electrician</option>
-              <option>Car AC Technician</option>
-              <option>Car Detailing Expert</option>
-              <option>Interior Designer</option>
-              <option>Civil Engineer</option>
-              <option>Gardening & Landscaping</option>
-              <option>Pest Control Expert</option>
             </select>
           </div>
           <div class="form-group">
@@ -103,6 +100,28 @@
             <label for="linkedin">LinkedIn / Website URL (for verification)</label>
             <input type="url" id="linkedin" placeholder="https://linkedin.com/in/yourprofile">
           </div>
+          <div class="form-group">
+            <label>Available Days *</label>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:6px;">
+              <label style="font-weight:400;font-size:0.9rem;display:flex;align-items:center;gap:4px;"><input type="checkbox" name="days" value="Mon"> Mon</label>
+              <label style="font-weight:400;font-size:0.9rem;display:flex;align-items:center;gap:4px;"><input type="checkbox" name="days" value="Tue"> Tue</label>
+              <label style="font-weight:400;font-size:0.9rem;display:flex;align-items:center;gap:4px;"><input type="checkbox" name="days" value="Wed"> Wed</label>
+              <label style="font-weight:400;font-size:0.9rem;display:flex;align-items:center;gap:4px;"><input type="checkbox" name="days" value="Thu"> Thu</label>
+              <label style="font-weight:400;font-size:0.9rem;display:flex;align-items:center;gap:4px;"><input type="checkbox" name="days" value="Fri"> Fri</label>
+              <label style="font-weight:400;font-size:0.9rem;display:flex;align-items:center;gap:4px;"><input type="checkbox" name="days" value="Sat"> Sat</label>
+              <label style="font-weight:400;font-size:0.9rem;display:flex;align-items:center;gap:4px;"><input type="checkbox" name="days" value="Sun"> Sun</label>
+            </div>
+          </div>
+          <div style="display:flex;gap:16px;">
+            <div class="form-group" style="flex:1;">
+              <label for="availFrom">Available From *</label>
+              <input type="time" id="availFrom" required>
+            </div>
+            <div class="form-group" style="flex:1;">
+              <label for="availTo">Available To *</label>
+              <input type="time" id="availTo" required>
+            </div>
+          </div>
           <button type="submit" class="btn btn--primary btn--lg btn--full">Submit Application</button>
         </form>
       </div>
@@ -126,11 +145,29 @@
         <div><h4>Support</h4><ul><li><a href="contact.html">Contact Us</a></li><li><a href="contact.html">FAQ</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Service</a></li></ul></div>
         <div><h4>For Experts</h4><ul><li><a href="join-expert.html">Join as Expert</a></li><li><a href="#">Expert Dashboard</a></li></ul></div>
       </div>
-      <div class="footer__bottom">&copy; 2026 Tapanta (tapanta.in). All rights reserved.</div>
+      <div class="footer__bottom">&copy; 2026 Tapanta (tapanta.in). All rights reserved. · Developed by STM Group</div>
     </div>
   </footer>
 
   <script src="js/main.js"></script>
+  <script src="js/categories-data.js"></script>
   <script src="js/experts-data.js"></script>
+  <script>
+    // Populate category dropdown with grouped sub-categories
+    const catSelect = document.getElementById('category');
+    if (catSelect) {
+      Object.entries(CATEGORIES).forEach(([cat, data]) => {
+        const group = document.createElement('optgroup');
+        group.label = data.icon + ' ' + cat;
+        Object.entries(data.subs).forEach(([sub, icon]) => {
+          const opt = document.createElement('option');
+          opt.value = sub;
+          opt.textContent = icon + ' ' + sub;
+          group.appendChild(opt);
+        });
+        catSelect.appendChild(group);
+      });
+    }
+  </script>
 </body>
 </html>

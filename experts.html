@@ -4,13 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Find Experts - Tapanta</title>
-  <meta name="description" content="Browse and connect with verified experts on Tapanta. Filter by price, experience, ratings and availability.">
+  <meta name="description" content="Browse and connect with verified experts on Tapanta.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5NHERV4JEE"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-5NHERV4JEE");</script>
 </head>
 <body>
-
   <header class="header">
     <nav class="nav">
       <a href="/" class="nav__logo">Tapanta</a>
@@ -23,140 +24,163 @@
         <li><a href="contact.html">Contact</a></li>
         <li><a href="booking.html" class="nav__cta">Book Now</a></li>
       </ul>
-      <button class="nav__toggle" id="navToggle" aria-label="Toggle navigation">
-        <span></span><span></span><span></span>
-      </button>
+      <button class="nav__toggle" id="navToggle" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
     </nav>
   </header>
-
   <section class="page-header">
-    <div class="container">
-      <h1>Find Experts</h1>
-      <p>Browse verified professionals across all categories</p>
-    </div>
+    <div class="container"><h1>Find Experts</h1><p>Browse verified professionals across all categories</p></div>
   </section>
-
   <section class="section">
     <div class="container">
       <div class="filters">
-        <select aria-label="Category">
-          <option>All Categories</option>
-          <option>Health</option>
-          <option>Career</option>
-          <option>Legal</option>
-          <option>Business</option>
-          <option>Finance</option>
-          <option>Mental Health</option>
-          <option>Technology</option>
-          <option>Fitness</option>
-          <option>Astrology</option>
-        </select>
-        <select aria-label="Price range">
-          <option>Any Price</option>
-          <option>Under ₹500</option>
-          <option>₹500 - ₹1000</option>
-          <option>₹1000+</option>
-        </select>
-        <select aria-label="Experience">
-          <option>Any Experience</option>
-          <option>1-5 years</option>
-          <option>5-10 years</option>
-          <option>10+ years</option>
-        </select>
-        <select aria-label="Rating">
-          <option>Any Rating</option>
-          <option>4.5+ Stars</option>
-          <option>4.0+ Stars</option>
-          <option>3.5+ Stars</option>
-        </select>
-        <select aria-label="Availability">
-          <option>Any Availability</option>
-          <option>Online Now</option>
-          <option>Available Today</option>
-        </select>
+        <div style="position:relative;flex:1;min-width:200px;">
+          <input type="text" id="expertSearch" placeholder="Search experts, categories..." autocomplete="off" style="width:100%;">
+          <div class="search-suggestions" id="expertSuggestions"></div>
+        </div>
+        <select id="categoryFilter" aria-label="Category"><option value="">All Categories</option></select>
+        <select aria-label="Price range"><option>Any Price</option><option>Under &#8377;500</option><option>&#8377;500 - &#8377;1000</option><option>&#8377;1000+</option></select>
+        <select aria-label="Experience"><option>Any Experience</option><option>1-5 years</option><option>5-10 years</option><option>10+ years</option></select>
       </div>
-
-      <div class="experts-grid" id="expertsGrid">
-        <!-- Dynamically populated from approved experts -->
-      </div>
-      <div id="noExperts" style="display:none; text-align:center; padding: 60px 20px; color: var(--text-light);">
-        <div style="font-size: 3rem; margin-bottom: 12px;">🔍</div>
-        <p>No approved experts yet. <a href="join-expert.html">Apply to become an expert</a></p>
-      </div>
+      <div class="experts-grid" id="expertsGrid"></div>
+      <div id="noExperts" style="display:none;text-align:center;padding:60px 20px;color:var(--text-light);"></div>
     </div>
   </section>
-
   <footer class="footer">
     <div class="container">
       <div class="footer__grid">
-        <div>
-          <div class="footer__brand">Tapanta</div>
-          <p class="footer__desc">Making expert knowledge accessible, fast, and affordable for everyone.</p>
-        </div>
+        <div><div class="footer__brand">Tapanta</div><p class="footer__desc">Making expert knowledge accessible, fast, and affordable for everyone.</p></div>
         <div><h4>Platform</h4><ul><li><a href="categories.html">Categories</a></li><li><a href="experts.html">Find Experts</a></li><li><a href="blog.html">Blog</a></li><li><a href="about.html">About Us</a></li></ul></div>
         <div><h4>Support</h4><ul><li><a href="contact.html">Contact Us</a></li><li><a href="contact.html">FAQ</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Service</a></li></ul></div>
         <div><h4>For Experts</h4><ul><li><a href="join-expert.html">Join as Expert</a></li><li><a href="#">Expert Dashboard</a></li><li><a href="#">Expert Guidelines</a></li></ul></div>
       </div>
-      <div class="footer__bottom">&copy; 2026 Tapanta (tapanta.in). All rights reserved.</div>
+      <div class="footer__bottom">&copy; 2026 Tapanta (tapanta.in). All rights reserved. &middot; Developed by STM Group</div>
     </div>
   </footer>
-
   <script src="js/main.js"></script>
+  <script src="js/categories-data.js"></script>
   <script src="js/experts-data.js"></script>
   <script>
-    const CATEGORY_ICONS = {
-      'Health & Nutrition': '🏥', 'Career Guidance': '💼', 'Legal Advice': '⚖️',
-      'Business Consulting': '📊', 'Finance & Tax': '💰', 'Mental Health': '🧠',
-      'Technology': '💻', 'Fitness & Wellness': '💪', 'Astrology': '🔮',
-      'Education': '🎓', 'Relationships': '💑', 'Startup Advice': '🚀',
-      'Spiritual Guidance': '🙏', 'Nutrition & Diet': '🍎',
-      'Car Mechanic': '🚗', 'Auto Electrician': '⚡', 'Car AC Technician': '❄️',
-      'Car Detailing Expert': '🔧', 'Interior Designer': '🎨', 'Civil Engineer': '🧱',
-      'Gardening & Landscaping': '🌿', 'Pest Control Expert': '🧹'
-    };
+  function esc(s){if(!s)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 
-    async function renderApprovedExperts() {
-      const experts = await ExpertsDB.getApproved();
-      const grid = document.getElementById('expertsGrid');
-      const noExperts = document.getElementById('noExperts');
+  async function renderExperts(filterPrimary, filterSub, searchQuery) {
+    var experts = await ExpertsDB.getApproved();
+    var grid = document.getElementById('expertsGrid');
+    var noEl = document.getElementById('noExperts');
 
-      if (experts.length === 0) {
-        grid.style.display = 'none';
-        noExperts.style.display = 'block';
-        return;
-      }
-
-      noExperts.style.display = 'none';
-      grid.style.display = 'grid';
-      grid.innerHTML = experts.map(e => `
-        <a href="expert-profile.html?id=${e.id}" class="expert-card">
-          <div class="expert-card__img">${CATEGORY_ICONS[e.category] || '👤'}</div>
-          <div class="expert-card__body">
-            <div class="expert-card__name">${escapeHtml(e.name)}</div>
-            <div class="expert-card__specialty">${escapeHtml(e.specialty)} · ${e.experience} yrs exp</div>
-            <div class="expert-card__meta">
-              <span class="expert-card__rating">⭐ ${e.rating || 'New'} (${e.reviews || 0})</span>
-              <span class="expert-card__price">₹${e.price}/session</span>
-            </div>
-            <div class="expert-card__tags">
-              <span class="tag">${escapeHtml(e.category)}</span>
-            </div>
-            <div class="expert-card__actions">
-              <span class="btn btn--primary btn--sm btn--full">Book Now</span>
-            </div>
-          </div>
-        </a>
-      `).join('');
+    // PRIMARY filter: experts whose category is a sub under this primary,
+    // OR whose category IS the primary name itself (e.g. "Technology")
+    if (filterPrimary && CATEGORIES[filterPrimary]) {
+      var subNames = Object.keys(CATEGORIES[filterPrimary].subs);
+      experts = experts.filter(function(e) {
+        return subNames.indexOf(e.category) !== -1 || resolvePrimary(e.category) === filterPrimary;
+      });
     }
 
-    function escapeHtml(str) {
-      if (!str) return '';
-      const d = document.createElement('div');
-      d.textContent = str;
-      return d.innerHTML;
+    // SUB filter: ONLY exact sub-category match (no spreading to all subs)
+    if (filterSub) {
+      experts = experts.filter(function(e) {
+        return e.category === filterSub;
+      });
     }
 
-    renderApprovedExperts();
+    // SEARCH: match name, specialty, category, or resolved primary
+    if (searchQuery) {
+      var q = searchQuery.toLowerCase();
+      experts = experts.filter(function(e) {
+        if ((e.name||'').toLowerCase().indexOf(q) !== -1) return true;
+        if ((e.specialty||'').toLowerCase().indexOf(q) !== -1) return true;
+        if ((e.category||'').toLowerCase().indexOf(q) !== -1) return true;
+        var pri = resolvePrimary(e.category);
+        if (pri && pri.toLowerCase().indexOf(q) !== -1) return true;
+        return false;
+      });
+    }
+
+    if (experts.length === 0) {
+      grid.style.display = 'none';
+      noEl.innerHTML = '<div style="font-size:3rem;margin-bottom:16px;">&#128532;</div>' +
+        '<p style="font-size:1.15rem;font-weight:600;margin-bottom:8px;">No experts available currently</p>' +
+        '<p style="margin-bottom:16px;">We are working on adding experts in this area. Check back soon!</p>' +
+        '<a href="join-expert.html" class="btn btn--primary">Apply to become an expert</a>';
+      noEl.style.display = 'block'; return;
+    }
+    noEl.style.display = 'none';
+    grid.style.display = 'grid';
+    grid.innerHTML = experts.map(function(e) {
+      return '<a href="expert-profile.html?id='+e.id+'" class="expert-card">' +
+        expertImgHtml(e.name, e.category) + '<div class="expert-card__body">' +
+        '<div class="expert-card__name">'+esc(e.name)+'</div>' +
+        '<div class="expert-card__specialty">'+esc(e.specialty)+' &middot; '+e.experience+' yrs exp</div>' +
+        '<div class="expert-card__meta"><span class="expert-card__price">&#8377;'+e.price+'/session</span></div>' +
+        '<div class="expert-card__tags"><span class="tag">'+esc(e.category)+'</span></div>' +
+        '<div class="expert-card__actions"><span class="btn btn--primary btn--sm btn--full">Book Now</span></div>' +
+        '</div></a>';
+    }).join('');
+  }
+
+  // Populate dropdown
+  var catFilter = document.getElementById('categoryFilter');
+  Object.entries(CATEGORIES).forEach(function(entry) {
+    var cat=entry[0], data=entry[1];
+    var grp = document.createElement('optgroup');
+    grp.label = data.icon + ' ' + cat;
+    var allOpt = document.createElement('option');
+    allOpt.value = '__p__' + cat; allOpt.textContent = 'All ' + cat;
+    grp.appendChild(allOpt);
+    Object.entries(data.subs).forEach(function(s) {
+      var opt = document.createElement('option');
+      opt.value = s[0]; opt.textContent = s[1] + ' ' + s[0];
+      grp.appendChild(opt);
+    });
+    catFilter.appendChild(grp);
+  });
+
+  // Search suggestions
+  var searchInput = document.getElementById('expertSearch');
+  var sugBox = document.getElementById('expertSuggestions');
+  searchInput.addEventListener('input', function() {
+    var q = searchInput.value.trim();
+    if (q.length < 2) { sugBox.style.display='none'; return; }
+    var r = searchCategories(q);
+    if (!r.length) { sugBox.innerHTML='<div class="sug-item sug-empty">No matching categories</div>'; }
+    else { sugBox.innerHTML = r.slice(0,8).map(function(x) {
+      return '<div class="sug-item" data-sub="'+x.sub+'"><span class="sug-icon">'+x.icon+'</span>' +
+        '<span><span class="sug-name">'+x.sub+'</span><span class="sug-parent">'+x.primary+'</span></span></div>';
+    }).join(''); }
+    sugBox.style.display='block';
+  });
+  sugBox.addEventListener('click', function(ev) {
+    var item = ev.target.closest('.sug-item[data-sub]');
+    if (!item) return;
+    var sub = item.getAttribute('data-sub');
+    searchInput.value = sub; sugBox.style.display='none';
+    catFilter.value = sub;
+    renderExperts(null, sub, null);
+  });
+  document.addEventListener('click', function(ev) { if (!ev.target.closest('.filters')) sugBox.style.display='none'; });
+  searchInput.addEventListener('keypress', function(ev) {
+    if (ev.key==='Enter') { sugBox.style.display='none'; catFilter.value=''; renderExperts(null,null,searchInput.value.trim()||null); }
+  });
+
+  // Dropdown change
+  catFilter.addEventListener('change', function() {
+    var val = catFilter.value; searchInput.value='';
+    if (!val) renderExperts(null,null,null);
+    else if (val.indexOf('__p__')===0) renderExperts(val.replace('__p__',''),null,null);
+    else renderExperts(null,val,null);
+  });
+
+  // URL params
+  var params = new URLSearchParams(window.location.search);
+  var urlCat = params.get('cat'), urlSub = params.get('sub'), urlSearch = params.get('search');
+  if (urlSub) { catFilter.value = urlSub; searchInput.value = urlSub; }
+  else if (urlCat && CATEGORIES[urlCat]) { catFilter.value = '__p__' + urlCat; }
+  else if (urlSearch) { searchInput.value = urlSearch; }
+  renderExperts(
+    (!urlSub && !urlSearch && urlCat) ? urlCat : null,
+    urlSub || null,
+    urlSearch || null
+  );
   </script>
 </body>
 </html>

@@ -1,6 +1,12 @@
 // Tapanta - Expert Data Management (SheetDB backend)
 const SHEET_API = 'https://sheetdb.io/api/v1/z5ld692xtifsm';
 
+// Build expert card image HTML: always use category icon
+function expertImgHtml(name, category) {
+  var icon = (typeof getSubIcon === 'function') ? getSubIcon(category) : '👤';
+  return '<div class="expert-card__img">' + icon + '</div>';
+}
+
 const ExpertsDB = {
   async getAll() {
     try {
@@ -49,6 +55,10 @@ const ExpertsDB = {
           bio: data.bio,
           price: data.price,
           linkedin: data.linkedin || '',
+          gender: data.gender || '',
+          availDays: data.availDays || '',
+          availFrom: data.availFrom || '',
+          availTo: data.availTo || '',
           status: 'pending',
           rating: '0',
           reviews: '0',
@@ -121,13 +131,17 @@ if (expertForm) {
       name: document.getElementById('fullName').value.trim(),
       email: document.getElementById('email').value.trim(),
       phone: document.getElementById('phone').value.trim(),
+      gender: document.getElementById('gender').value,
       category: document.getElementById('category').value,
       specialty: document.getElementById('specialty').value.trim(),
       experience: document.getElementById('experience').value,
       qualifications: document.getElementById('qualifications').value.trim(),
       bio: document.getElementById('bio').value.trim(),
       price: document.getElementById('price').value,
-      linkedin: document.getElementById('linkedin').value.trim()
+      linkedin: document.getElementById('linkedin').value.trim(),
+      availDays: Array.from(document.querySelectorAll('input[name="days"]:checked')).map(function(c){return c.value;}).join(', '),
+      availFrom: document.getElementById('availFrom').value,
+      availTo: document.getElementById('availTo').value
     };
 
     const result = await ExpertsDB.addApplication(data);

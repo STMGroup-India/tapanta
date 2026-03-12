@@ -37,26 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Search bar functionality
-  const searchBar = document.querySelector('.search-bar');
-  if (searchBar) {
-    const searchBtn = searchBar.querySelector('button');
-    const searchInput = searchBar.querySelector('input');
-    if (searchBtn && searchInput) {
-      searchBtn.addEventListener('click', () => {
-        const query = searchInput.value.trim();
-        if (query) {
-          window.location.href = 'experts.html';
-        }
-      });
-      searchInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-          searchBtn.click();
-        }
-      });
-    }
-  }
-
   // Smooth scroll for anchor links
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', (e) => {
