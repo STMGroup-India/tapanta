@@ -468,6 +468,8 @@ ul { list-style: none; }
   color: var(--text);
   background: var(--bg);
   outline: none;
+  flex: 1;
+  min-width: 150px;
 }
 
 .filters select:focus, .filters input:focus { border-color: var(--primary); }
