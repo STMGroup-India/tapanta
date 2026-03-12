@@ -155,6 +155,7 @@ ul { list-style: none; }
   font-size: 1rem;
   color: var(--text);
   outline: none;
+  border-radius: 50px 0 0 50px;
 }
 
 .search-bar button {
@@ -166,6 +167,7 @@ ul { list-style: none; }
   font-size: 0.95rem;
   cursor: pointer;
   transition: background var(--transition);
+  border-radius: 0 50px 50px 0;
 }
 
 .search-bar button:hover { background: #D97706; }
@@ -196,9 +198,9 @@ ul { list-style: none; }
   text-decoration: none;
 }
 .sug-item:hover { background: var(--primary-light); color: var(--text); }
-.sug-icon { font-size: 1.4rem; flex-shrink: 0; }
-.sug-name { display: block; font-weight: 600; font-size: 0.92rem; }
-.sug-parent { display: block; font-size: 0.78rem; color: var(--text-light); }
+.sug-icon { font-size: 1.4rem; flex-shrink: 0; width: 32px; text-align: center; }
+.sug-name { display: block; font-weight: 600; font-size: 0.92rem; text-align: left; }
+.sug-parent { display: block; font-size: 0.78rem; color: var(--text-light); text-align: left; }
 .sug-empty { color: var(--text-light); font-size: 0.9rem; cursor: default; }
 .sug-empty:hover { background: transparent; }
 
