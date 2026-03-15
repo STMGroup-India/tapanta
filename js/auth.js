@@ -20,18 +20,13 @@ auth.onAuthStateChanged(async function(user) {
     // Check if user has phone number in Firestore
     const userDoc = await db.collection('users').doc(user.uid).get();
     if (userDoc.exists && userDoc.data().phone) {
-      // Logged in with phone - show profile
+      // Logged in with phone - show compact profile
       const photo = user.photoURL || '';
       const name = (user.displayName || 'User').split(' ')[0];
       li.innerHTML = '<div class="nav-profile" id="navProfile">' +
-        (photo ? '<img src="' + photo + '" alt="" class="nav-profile__img">' : '<span class="nav-profile__icon">👤</span>') +
         '<span class="nav-profile__name">' + name + '</span>' +
+        (photo ? '<img src="' + photo + '" alt="" class="nav-profile__img">' : '<span class="nav-profile__icon">👤</span>') +
         '<div class="nav-profile__dropdown" id="profileDropdown">' +
-          '<div class="nav-profile__info">' +
-            '<strong>' + (user.displayName || 'User') + '</strong>' +
-            '<small>' + user.email + '</small>' +
-            '<small>📞 ' + userDoc.data().phone + '</small>' +
-          '</div>' +
           '<a href="#" onclick="tapantaSignOut();return false;" class="nav-profile__logout">Sign Out</a>' +
         '</div></div>';
     } else {
