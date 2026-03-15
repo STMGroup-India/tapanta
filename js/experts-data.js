@@ -1,5 +1,4 @@
-// Tapanta - Expert Data Management (SheetDB backend)
-const SHEET_API = 'https://sheetdb.io/api/v1/z5ld692xtifsm';
+// Tapanta - Expert Data Management (Firebase Firestore backend)
 
 // Build expert card image HTML: always use category icon
 function expertImgHtml(name, category) {
@@ -7,11 +6,16 @@ function expertImgHtml(name, category) {
   return '<div class="expert-card__img">' + icon + '</div>';
 }
 
+// Wait for Firebase to be ready
+function getDB() {
+  return firebase.firestore();
+}
+
 const ExpertsDB = {
   async getAll() {
     try {
-      const res = await fetch(SHEET_API);
-      return await res.json();
+      const snap = await getDB().collection('experts').orderBy('appliedAt', 'desc').get();
+      return snap.docs.map(doc => doc.data());
     } catch (err) {
       console.error('Failed to fetch experts:', err);
       return [];
@@ -20,8 +24,10 @@ const ExpertsDB = {
 
   async getApproved() {
     try {
-      const res = await fetch(SHEET_API + '/search?status=approved');
-      return await res.json();
+      const snap = await getDB().collection('experts')
+        .where('status', '==', 'approved')
+        .get();
+      return snap.docs.map(doc => doc.data());
     } catch (err) {
       console.error('Failed to fetch approved experts:', err);
       return [];
@@ -30,9 +36,10 @@ const ExpertsDB = {
 
   async getById(id) {
     try {
-      const res = await fetch(SHEET_API + '/search?id=' + encodeURIComponent(id));
-      const data = await res.json();
-      return data.length > 0 ? data[0] : null;
+      const snap = await getDB().collection('experts')
+        .where('id', '==', id)
+        .get();
+      return snap.docs.length > 0 ? snap.docs[0].data() : null;
     } catch (err) {
       console.error('Failed to fetch expert:', err);
       return null;
@@ -42,35 +49,29 @@ const ExpertsDB = {
   async addApplication(data) {
     try {
       const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-      const row = {
-        data: [{
-          id,
-          name: data.name,
-          email: data.email,
-          phone: "'" + data.phone,
-          category: data.category,
-          specialty: data.specialty,
-          experience: data.experience,
-          qualifications: data.qualifications,
-          bio: data.bio,
-          price: data.price,
-          linkedin: data.linkedin || '',
-          gender: data.gender || '',
-          availDays: data.availDays || '',
-          availFrom: data.availFrom || '',
-          availTo: data.availTo || '',
-          status: 'pending',
-          rating: '0',
-          reviews: '0',
-          appliedAt: new Date().toISOString()
-        }]
+      const expert = {
+        id: id,
+        name: data.name || '',
+        email: data.email || '',
+        phone: data.phone || '',
+        gender: data.gender || '',
+        category: data.category || '',
+        specialty: data.specialty || '',
+        experience: data.experience || '0',
+        qualifications: data.qualifications || '',
+        bio: data.bio || '',
+        price: data.price || '0',
+        linkedin: data.linkedin || '',
+        availDays: data.availDays || '',
+        availFrom: data.availFrom || '',
+        availTo: data.availTo || '',
+        status: 'pending',
+        rating: '0',
+        reviews: '0',
+        appliedAt: new Date().toISOString()
       };
-      const res = await fetch(SHEET_API, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(row)
-      });
-      return await res.json();
+      await getDB().collection('experts').doc(id).set(expert);
+      return { success: true, id: id };
     } catch (err) {
       console.error('Failed to submit application:', err);
       return { error: true };
@@ -79,12 +80,11 @@ const ExpertsDB = {
 
   async approve(id) {
     try {
-      const res = await fetch(SHEET_API + '/id/' + encodeURIComponent(id), {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data: { status: 'approved' } })
-      });
-      return await res.json();
+      const snap = await getDB().collection('experts').where('id', '==', id).get();
+      if (snap.docs.length > 0) {
+        await snap.docs[0].ref.update({ status: 'approved' });
+      }
+      return { success: true };
     } catch (err) {
       console.error('Failed to approve:', err);
       return { error: true };
@@ -93,12 +93,11 @@ const ExpertsDB = {
 
   async reject(id) {
     try {
-      const res = await fetch(SHEET_API + '/id/' + encodeURIComponent(id), {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data: { status: 'rejected' } })
-      });
-      return await res.json();
+      const snap = await getDB().collection('experts').where('id', '==', id).get();
+      if (snap.docs.length > 0) {
+        await snap.docs[0].ref.update({ status: 'rejected' });
+      }
+      return { success: true };
     } catch (err) {
       console.error('Failed to reject:', err);
       return { error: true };
@@ -107,10 +106,11 @@ const ExpertsDB = {
 
   async delete(id) {
     try {
-      const res = await fetch(SHEET_API + '/id/' + encodeURIComponent(id), {
-        method: 'DELETE'
-      });
-      return await res.json();
+      const snap = await getDB().collection('experts').where('id', '==', id).get();
+      if (snap.docs.length > 0) {
+        await snap.docs[0].ref.delete();
+      }
+      return { success: true };
     } catch (err) {
       console.error('Failed to delete:', err);
       return { error: true };
