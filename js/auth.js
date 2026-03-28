@@ -9,13 +9,9 @@ auth.onAuthStateChanged(async function(user) {
   const navLinks = document.getElementById('navLinks');
   if (!navLinks) return;
 
-  // Add theme toggle if not already present
-  if (!document.getElementById('themeToggleItem')) {
-    var themeLi = document.createElement('li');
-    themeLi.id = 'themeToggleItem';
-    themeLi.innerHTML = '<button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>';
-    // Will be appended after auth item below
-  }
+  // Apply saved theme on load
+  var saved = localStorage.getItem('tapanta-theme');
+  if (saved === 'dark') document.body.classList.add('dark-theme');
 
   // Toggle free session tags based on login state
   document.querySelectorAll('.free-session-login').forEach(function(el) { el.style.display = user ? 'none' : 'block'; });
@@ -28,9 +24,11 @@ auth.onAuthStateChanged(async function(user) {
   if (freeBooking) freeBooking.style.display = user ? 'block' : 'none';
   if (freeBookingLogin) freeBookingLogin.style.display = user ? 'none' : 'block';
 
-  // Remove existing auth elements
+  // Remove existing auth and theme elements to re-order
   const oldAuth = document.getElementById('navAuthItem');
   if (oldAuth) oldAuth.remove();
+  const oldTheme = document.getElementById('themeToggleItem');
+  if (oldTheme) oldTheme.remove();
 
   const li = document.createElement('li');
   li.id = 'navAuthItem';
@@ -59,19 +57,18 @@ auth.onAuthStateChanged(async function(user) {
   }
   navLinks.appendChild(li);
 
-  // Append theme toggle after auth item
-  if (themeLi && !document.getElementById('themeToggleItem')) {
-    navLinks.appendChild(themeLi);
-    var toggle = document.getElementById('themeToggle');
-    var saved = localStorage.getItem('tapanta-theme');
-    if (saved === 'dark') { document.body.classList.add('dark-theme'); toggle.textContent = '☀️'; }
-    toggle.addEventListener('click', function() {
-      document.body.classList.toggle('dark-theme');
-      var isDark = document.body.classList.contains('dark-theme');
-      toggle.textContent = isDark ? '☀️' : '🌙';
-      localStorage.setItem('tapanta-theme', isDark ? 'dark' : 'light');
-    });
-  }
+  // Always add theme toggle after auth item
+  var themeLi2 = document.createElement('li');
+  themeLi2.id = 'themeToggleItem';
+  var isDark = document.body.classList.contains('dark-theme');
+  themeLi2.innerHTML = '<button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">' + (isDark ? '☀️' : '🌙') + '</button>';
+  navLinks.appendChild(themeLi2);
+  document.getElementById('themeToggle').addEventListener('click', function() {
+    document.body.classList.toggle('dark-theme');
+    var dark = document.body.classList.contains('dark-theme');
+    this.textContent = dark ? '☀️' : '🌙';
+    localStorage.setItem('tapanta-theme', dark ? 'dark' : 'light');
+  });
 });
 
 // Google Sign In
