@@ -14,16 +14,7 @@ auth.onAuthStateChanged(async function(user) {
     var themeLi = document.createElement('li');
     themeLi.id = 'themeToggleItem';
     themeLi.innerHTML = '<button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>';
-    navLinks.appendChild(themeLi);
-    var toggle = document.getElementById('themeToggle');
-    var saved = localStorage.getItem('tapanta-theme');
-    if (saved === 'dark') { document.body.classList.add('dark-theme'); toggle.textContent = '☀️'; }
-    toggle.addEventListener('click', function() {
-      document.body.classList.toggle('dark-theme');
-      var isDark = document.body.classList.contains('dark-theme');
-      toggle.textContent = isDark ? '☀️' : '🌙';
-      localStorage.setItem('tapanta-theme', isDark ? 'dark' : 'light');
-    });
+    // Will be appended after auth item below
   }
 
   // Toggle free session tags based on login state
@@ -67,6 +58,20 @@ auth.onAuthStateChanged(async function(user) {
     li.innerHTML = '<a href="#" onclick="tapantaSignIn();return false;" class="nav__cta" style="background:var(--success);">Sign In</a>';
   }
   navLinks.appendChild(li);
+
+  // Append theme toggle after auth item
+  if (themeLi && !document.getElementById('themeToggleItem')) {
+    navLinks.appendChild(themeLi);
+    var toggle = document.getElementById('themeToggle');
+    var saved = localStorage.getItem('tapanta-theme');
+    if (saved === 'dark') { document.body.classList.add('dark-theme'); toggle.textContent = '☀️'; }
+    toggle.addEventListener('click', function() {
+      document.body.classList.toggle('dark-theme');
+      var isDark = document.body.classList.contains('dark-theme');
+      toggle.textContent = isDark ? '☀️' : '🌙';
+      localStorage.setItem('tapanta-theme', isDark ? 'dark' : 'light');
+    });
+  }
 });
 
 // Google Sign In
