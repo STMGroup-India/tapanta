@@ -194,7 +194,8 @@
       return '<a href="expert-profile.html?id='+e.id+'" class="expert-card">' +
         expertImgHtml(e.name, e.category, e.photo) + '<div class="expert-card__body">' +
         '<div class="expert-card__name">'+esc(e.name)+'</div>' +
-        '<div class="expert-card__specialty">'+esc(e.specialty)+' &middot; '+e.experience+' yrs exp</div>' +
+        '<div class="expert-card__specialty" style="min-height:auto;-webkit-line-clamp:1;">'+esc(e.category)+' &middot; '+e.experience+' yrs exp</div>' +
+        '<div class="expert-card__specialty" style="min-height:auto;-webkit-line-clamp:1;margin-bottom:16px;">'+esc(e.specialty)+'</div>' +
         '<div class="expert-card__meta"><span class="expert-card__price">&#8377;'+e.price+'/session</span></div>' +
         '<div class="expert-card__tags"><span class="tag">'+esc(e.category)+'</span></div>' +
         '<div style="color:#10B981;font-size:0.75rem;font-weight:600;margin-top:4px;">🎉 First Session FREE</div>' +

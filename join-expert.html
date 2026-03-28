@@ -58,7 +58,7 @@
           </div>
           <div class="form-group">
             <label for="phone">Phone Number *</label>
-            <input type="tel" id="phone" placeholder="+91 9876543210" required>
+            <input type="tel" id="phone" placeholder="+91 9876543210" pattern="[0-9+\s\-]+" title="Only numbers, +, spaces and dashes allowed" required>
           </div>
           <div class="form-group">
             <label for="photoUpload">Profile Photo</label>
@@ -102,8 +102,8 @@
             <textarea id="bio" placeholder="Tell users about yourself, your experience, and how you can help them..." required></textarea>
           </div>
           <div class="form-group">
-            <label for="price">Price per Session (₹) *</label>
-            <input type="number" id="price" placeholder="e.g. 500" min="100" required>
+            <label for="price">Price per Session (₹) * <small style="font-weight:400;color:var(--text-light);">(max ₹1000)</small></label>
+            <input type="number" id="price" placeholder="e.g. 500" min="100" max="1000" required>
           </div>
           <div class="form-group">
             <label for="linkedin">LinkedIn / Website URL (for verification)</label>
@@ -197,6 +197,30 @@
     if (specInput && specCount) {
       specInput.addEventListener('input', function() {
         specCount.textContent = '(' + specInput.value.length + '/60)';
+      });
+    }
+
+    // Phone: allow only numbers, +, spaces, dashes
+    var phoneInput = document.getElementById('phone');
+    if (phoneInput) {
+      phoneInput.addEventListener('input', function() {
+        phoneInput.value = phoneInput.value.replace(/[^0-9+\s\-]/g, '');
+      });
+    }
+
+    // Price: enforce max 1000
+    var priceInput = document.getElementById('price');
+    if (priceInput) {
+      priceInput.addEventListener('input', function() {
+        if (parseInt(priceInput.value) > 1000) priceInput.value = 1000;
+      });
+    }
+
+    // Experience: enforce max 50
+    var expInput = document.getElementById('experience');
+    if (expInput) {
+      expInput.addEventListener('input', function() {
+        if (parseInt(expInput.value) > 50) expInput.value = 50;
       });
     }
 
