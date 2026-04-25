@@ -31,10 +31,13 @@ const ExpertsDB = {
 
   async getApproved() {
     try {
-      const snap = await getDB().collection('experts')
-        .where('status', '==', 'approved')
-        .get();
-      return snap.docs.map(doc => doc.data());
+      // Fetch all experts and filter client-side for resilience
+      const snap = await getDB().collection('experts').get();
+      var all = snap.docs.map(doc => doc.data());
+      console.log('All experts from DB:', all.length, all.map(e => e.name + ':' + e.status));
+      return all.filter(function(e) {
+        return e.status && e.status.toLowerCase() === 'approved';
+      });
     } catch (err) {
       console.error('Failed to fetch approved experts:', err);
       return [];
