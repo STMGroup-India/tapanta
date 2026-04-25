@@ -68,9 +68,24 @@
           </div>
 
           <h2 style="font-size:1.2rem;margin-top:32px;margin-bottom:16px;">2. Select Date</h2>
-          <div class="filters" style="margin-bottom:0;">
-            <input type="date" id="bookingDate" aria-label="Select date" style="flex:1;cursor:pointer;font-size:1rem;padding:14px 16px;" required onclick="this.showPicker ? this.showPicker() : null">
+          <div id="calendarWidget" style="border:1px solid var(--border);border-radius:var(--radius);padding:16px;background:var(--bg);max-width:360px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <button type="button" id="calPrev" style="background:none;border:none;font-size:1.2rem;cursor:pointer;padding:4px 8px;border-radius:6px;color:var(--text);" aria-label="Previous month">‹</button>
+              <span id="calMonthYear" style="font-weight:700;font-size:1rem;"></span>
+              <button type="button" id="calNext" style="background:none;border:none;font-size:1.2rem;cursor:pointer;padding:4px 8px;border-radius:6px;color:var(--text);" aria-label="Next month">›</button>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;">
+              <div style="font-size:0.75rem;font-weight:600;color:var(--text-light);padding:6px 0;">Sun</div>
+              <div style="font-size:0.75rem;font-weight:600;color:var(--text-light);padding:6px 0;">Mon</div>
+              <div style="font-size:0.75rem;font-weight:600;color:var(--text-light);padding:6px 0;">Tue</div>
+              <div style="font-size:0.75rem;font-weight:600;color:var(--text-light);padding:6px 0;">Wed</div>
+              <div style="font-size:0.75rem;font-weight:600;color:var(--text-light);padding:6px 0;">Thu</div>
+              <div style="font-size:0.75rem;font-weight:600;color:var(--text-light);padding:6px 0;">Fri</div>
+              <div style="font-size:0.75rem;font-weight:600;color:var(--text-light);padding:6px 0;">Sat</div>
+            </div>
+            <div id="calDays" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;"></div>
           </div>
+          <input type="hidden" id="bookingDate">
           <p id="availDaysHint" style="font-size:0.82rem;color:var(--text-light);margin-top:8px;"></p>
 
           <h2 style="font-size:1.2rem;margin-top:32px;margin-bottom:16px;">3. Select Time Slot</h2>
@@ -179,9 +194,56 @@
 
     // Set min date to today
     var today = new Date().toISOString().split('T')[0];
-    var dateInput = document.getElementById('bookingDate');
-    dateInput.min = today;
-    dateInput.value = '';
+    var calMonth = new Date().getMonth();
+    var calYear = new Date().getFullYear();
+
+    function renderCalendar() {
+      var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      document.getElementById('calMonthYear').textContent = months[calMonth] + ' ' + calYear;
+      var firstDay = new Date(calYear, calMonth, 1).getDay();
+      var daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+      var html = '';
+      for (var i = 0; i < firstDay; i++) html += '<div></div>';
+      for (var d = 1; d <= daysInMonth; d++) {
+        var dateStr = calYear + '-' + String(calMonth + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+        var isPast = dateStr < today;
+        var isSelected = dateStr === selectedDate;
+        var isToday = dateStr === today;
+        var style = 'padding:8px 4px;border-radius:8px;font-size:0.88rem;cursor:pointer;transition:all 0.15s;';
+        if (isPast) style += 'color:#CBD5E1;cursor:default;';
+        else if (isSelected) style += 'background:var(--primary);color:#fff;font-weight:700;';
+        else if (isToday) style += 'border:2px solid var(--primary);font-weight:600;';
+        else style += 'color:var(--text);';
+        html += '<div class="cal-day" data-date="' + dateStr + '" data-past="' + isPast + '" style="' + style + '">' + d + '</div>';
+      }
+      document.getElementById('calDays').innerHTML = html;
+    }
+
+    renderCalendar();
+
+    document.getElementById('calPrev').addEventListener('click', function() {
+      if (calMonth === new Date().getMonth() && calYear === new Date().getFullYear()) return;
+      calMonth--;
+      if (calMonth < 0) { calMonth = 11; calYear--; }
+      renderCalendar();
+    });
+
+    document.getElementById('calNext').addEventListener('click', function() {
+      calMonth++;
+      if (calMonth > 11) { calMonth = 0; calYear++; }
+      renderCalendar();
+    });
+
+    document.getElementById('calDays').addEventListener('click', function(e) {
+      var day = e.target.closest('.cal-day');
+      if (!day || day.dataset.past === 'true') return;
+      selectedDate = day.dataset.date;
+      document.getElementById('bookingDate').value = selectedDate;
+      var dd = new Date(selectedDate + 'T00:00:00');
+      document.getElementById('sumDate').textContent = dd.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+      renderCalendar();
+      checkReady();
+    });
 
     // Show available days hint
     if (expert.availDays) {
@@ -238,24 +300,6 @@
       var labels = { chat: 'Chat Consultation', call: 'Audio Call', video: 'Video Call' };
       document.getElementById('sumType').textContent = labels[selectedType] || selectedType;
     }
-
-    // Date selection
-    document.getElementById('bookingDate').addEventListener('change', function() {
-      selectedDate = this.value;
-      if (selectedDate && selectedDate < today) {
-        alert('Please select a future date.');
-        this.value = '';
-        selectedDate = '';
-        document.getElementById('sumDate').textContent = 'Select a date';
-        checkReady();
-        return;
-      }
-      if (selectedDate) {
-        var d = new Date(selectedDate + 'T00:00:00');
-        document.getElementById('sumDate').textContent = d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-      }
-      checkReady();
-    });
 
     // Time slot selection
     slotsEl.addEventListener('click', function(e) {
