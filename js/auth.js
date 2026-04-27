@@ -11,7 +11,7 @@ auth.onAuthStateChanged(async function(user) {
 
   // Apply saved theme on load
   var saved = localStorage.getItem('tapanta-theme');
-  if (saved === 'dark') document.body.classList.add('dark-theme');
+  if (saved === 'dark') { document.body.classList.add('dark-theme'); document.documentElement.classList.add('dark-theme'); }
 
   // Add/remove My Sessions nav link based on login
   var sessionsLink = document.getElementById('navSessionsItem');
@@ -80,6 +80,7 @@ auth.onAuthStateChanged(async function(user) {
   navLinks.appendChild(themeLi2);
   document.getElementById('themeToggle').addEventListener('click', function() {
     document.body.classList.toggle('dark-theme');
+    document.documentElement.classList.toggle('dark-theme');
     var dark = document.body.classList.contains('dark-theme');
     this.textContent = dark ? '☀️' : '🌙';
     localStorage.setItem('tapanta-theme', dark ? 'dark' : 'light');
